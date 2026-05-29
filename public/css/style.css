@@ -1,0 +1,460 @@
+@charset "UTF-8";
+
+/* =========================
+   共通設定
+========================= */
+body {
+    margin: 0;
+    padding-top: 70px; /* ヘッダーの高さ分 */
+    padding: 0;
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00c6fb);
+    min-height: 100vh;
+}
+
+/* =========================
+   ログイン画面用
+========================= */
+
+/* ログイン画面中央寄せ */
+.login-wrapper {
+    background-image: url("/images/bg.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000; /* ほかの要素より前面に出す */
+}
+
+.header-inner {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 120px; /* ロゴの高さ調整 */
+    width: 180px;
+}
+
+/* メインコンテナ */
+.container {
+    width: 90%;
+    max-width: 500px;
+
+    background-color: #ffffff;
+    padding: 50px;
+    border-radius: 25px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    text-align: center;
+}
+
+/* タイトル */
+.main-title {
+    font-size: 42px;
+    color: #333333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* サブタイトル */
+.sub-title {
+    font-size: 20px;
+    color: #ff0000;
+    margin-bottom: 40px;
+}
+
+/* フォーム */
+.login-form {
+    width: 100%;
+}
+
+/* 入力欄グループ */
+.form-group {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+/* ラベル */
+.form-group label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #444444;
+    font-weight: bold;
+}
+
+/* 入力欄 */
+.form-group input {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+
+    border: 2px solid #dcdcdc;
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    transition: 0.3s;
+}
+
+/* フォーカス時 */
+.form-group input:focus {
+    border-color: #4facfe;
+    outline: none;
+
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.4);
+}
+
+/* ボタンエリア */
+.button-container {
+    margin-top: 20px;
+}
+
+/* ログインボタン */
+.login-button {
+    width: 100%;
+    padding: 18px;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    color: white;
+    background: linear-gradient(135deg, #4facfe, #00c6fb);
+
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* ホバー時 */
+.login-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(0, 198, 251, 0.4);
+}
+
+/* =========================
+   メイン画面用
+========================= */
+
+/* ヘッダー */
+.app-header {
+    background-color: #2c3e50;
+    color: #fff;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    z-index: 1000;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ヘッダー内部 */
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 20px;
+    gap: 20px;
+}
+
+/* ロゴ */
+.header-logo {
+    margin: 0;
+    font-size: 1.5rem;
+    white-space: nowrap;
+}
+
+/* 検索フォーム */
+.search-form {
+    display: flex;
+    flex: 1;
+    max-width: 600px;
+}
+
+/* 検索入力 */
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+
+    border: none;
+    border-radius: 4px 0 0 4px;
+
+    font-size: 1rem;
+}
+
+/* 検索ボタン */
+.search-button {
+    background-color: #3498db;
+    color: white;
+
+    border: none;
+
+    padding: 10px 20px;
+
+    border-radius: 0 4px 4px 0;
+
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #2980b9;
+}
+
+.back-button {
+    position: relative;
+    z-index: 10;
+}
+
+/* 右側ボタン */
+.header-action {
+    white-space: nowrap;
+}
+
+/* メインエリア */
+.main-wrapper {
+    background-color: #f4f6f7;
+    min-height: 100vh;
+
+    padding: 100px 0 30px;
+}
+
+/* コンテンツ */
+.content-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ページタイトル */
+.page-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 本一覧グリッド */
+.book-grid {
+    display: grid;
+
+    grid-template-columns: repeat(8, 1fr);
+
+    gap: 15px;
+}
+
+/* 書籍カード */
+.book-card {
+    background-color: #fff;
+
+    border: 1px solid #e1e8ed;
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+
+    transition: transform 0.2s;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+}
+
+/* 画像エリア */
+.book-image-wrapper {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+
+    background-color: #eaeaea;
+}
+
+/* 書籍画像 */
+.book-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* 書籍情報 */
+.book-info {
+    padding: 8px;
+}
+
+/* タイトル */
+.book-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+
+    margin: 0 0 4px 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 著者 */
+.book-author {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+
+    margin: 0;
+}
+
+/* 経理部用ボタン */
+.btn-register {
+    background-color: #28a745;   /* 緑 */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-register:hover {
+    background-color: #218838;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #dc3545;   /* 赤 */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+
+/* 書籍詳細画面専用コンテナ */
+.detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.book-detail-image {
+    max-width: 840px;
+     height: auto; 
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    margin-bottom: 25px;
+}
+
+.alert-success{
+    color: #dc3545;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* コメント詳細、コメント入力欄を広くする */
+.comment-textarea {
+    width: 100% !important;        /* 横幅を画面いっぱいに */
+    min-height: 140px;             /* 縦も少し広く */
+    resize: vertical;              /* ユーザーが縦に伸ばせるように */
+    font-size: 1.05rem;
+    padding: 15px;
+    line-height: 1.6;
+}
+
+/* 成功メッセージを大きく目立たせる */
+.success-message {
+    font-size: 1.35rem;           /* 文字を大きく */
+    font-weight: bold;            /* 太字 */
+    padding: 18px 20px;           /* 余白を増やす */
+    margin-bottom: 25px;          /* 下の余白 */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);   /* 軽い影で目立たせる */
+}
+
+
+
+
+
+/* =========================
+   スマホ対応
+========================= */
+@media screen and (max-width: 900px) {
+
+    .book-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    .container {
+        padding: 35px 25px;
+    }
+
+    .main-title {
+        font-size: 32px;
+    }
+
+    .sub-title {
+        font-size: 18px;
+    }
+
+    .form-group input {
+        font-size: 16px;
+        padding: 15px;
+    }
+
+    .login-button {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
