@@ -6,60 +6,9 @@
     <title>ログイン - 書籍管理システム</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f7f5f1;
-            overflow: hidden;
-        }
-
-        /* 背景の円 */
-        .bg-circle {
-            position: fixed;
-            border-radius: 50%;
-            background: rgba(206, 169, 169, 0.4);
-            z-index: -1;
-            animation: float 12s ease-in-out infinite;
-        }
-
-        .circle1 {
-            width: 300px;
-            height: 300px;
-            top: 15%;
-            left: 5%;
-        }
-
-        .circle2 {
-            width: 220px;
-            height: 220px;
-            top: 65%;
-            right: 10%;
-            animation-delay: -4s;
-        }
-
-        .circle3 {
-            width: 180px;
-            height: 180px;
-            top: 35%;
-            right: 25%;
-            animation-delay: -8s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-40px);
-            }
-        }
-
-        /* ログインカード */
-        .login-card {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-    </style>
+    
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    
 </head>
 
 <body>
