@@ -59,16 +59,8 @@ class RegistrationController extends Controller
      */
 public function store(Request $request)
     {
-
-    if (!auth()->user()->isAccounting()) {
-            return redirect()->route('books.general')
-->with('error', 'このページは経理部社員のみ利用可能です。');
-        }
-
-
-
         $request->validate([
-            'title'     => 'required|string|max:255',
+            'bookname'  => 'required|string|max:255',
             'author'    => 'nullable|string|max:255',
             'publisher' => 'nullable|string|max:255',
             'image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -76,14 +68,13 @@ public function store(Request $request)
 
         $image_url = $request->image_url ?? null;
 
-        // 画像アップロード処理
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
 
             $destinationPath = public_path('images/books');
             if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);   // フォルダがなければ自動作成
+                mkdir($destinationPath, 0777, true);
             }
 
             $file->move($destinationPath, $filename);
@@ -91,16 +82,15 @@ public function store(Request $request)
         }
 
         Book::create([
-            'bookname'   => $request->title,
+            'bookname'   => $request->bookname,     // ← ここを $request->bookname に修正
             'author'     => $request->author,
             'publisher'  => $request->publisher,
             'image_url'  => $image_url,
         ]);
 
         return redirect('/registrationConfirm')
-                     ->with('success', '書籍の登録が完了しました！');
+                    ->with('success', '書籍の登録が完了しました！');
     }
-
     
     /**
      * 登録完了画面（registrationConfirm）を表示する (GET)

@@ -74,19 +74,35 @@
         <input type="hidden" name="publisher" value="{{ $publisher ?? '' }}">
 
 
-        <div class="form-group">
-            <label for="display_title" style="color: #4a90e2;">書籍名</label>
-            <textarea id="display_title" class="title-input" readonly placeholder="確認用タイトル" required>{{ $title ?? '' }}</textarea>
+<div class="form-group">
+            <label for="bookname" style="color: #4a90e2;">書籍名 <span class="text-danger">*</span></label>
+            <textarea 
+                name="bookname" 
+                id="bookname" 
+                class="title-input" 
+                rows="3" 
+                placeholder="書籍名を入力してください"
+                required>{{ $title ?? old('bookname') }}</textarea>
+        </div>
+
+<div class="form-group">
+            <label for="author">著者</label>
+            <input type="text" 
+                name="author" 
+                id="author" 
+                class="form-control" 
+                value="{{ $author ?? old('author') }}" 
+                placeholder="著者名を入力してください">
         </div>
 
         <div class="form-group">
-            <label for="display_author">著者</label>
-            <input type="text" id="display_author" value="{{ $author ?? '' }}" readonly placeholder="著者名" style="font-weight: bold;">
-        </div>
-
-        <div class="form-group">
-            <label for="display_publisher">出版社</label>
-            <input type="text" id="display_publisher" value="{{ $publisher ?? '' }}" readonly placeholder="出版社名" style="font-weight: bold;">
+            <label for="publisher">出版社</label>
+            <input type="text" 
+                name="publisher" 
+                id="publisher" 
+                class="form-control" 
+                value="{{ $publisher ?? old('publisher') }}" 
+                placeholder="出版社名を入力してください">
         </div>
 
 <div class="mb-3">
@@ -95,7 +111,9 @@
         <small class="text-muted">JPG, PNG, GIF形式推奨（最大2MB）</small>
     </div>
 
-        <button type="submit" class="btn-submit" {{ empty($title) ? 'disabled' : '' }}>登録する</button>
+<button type="submit" class="btn-submit">
+            登録する
+        </button>
 
     </form>
 </div>
