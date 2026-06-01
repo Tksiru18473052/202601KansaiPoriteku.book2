@@ -26,7 +26,9 @@ class BookController extends Controller
         }
 
         // 4. ID順に並び替えてデータを取得
-        $books = $query->orderBy('id', 'asc')->get();
+        $books = $query->orderBy('id', 'asc')
+            ->paginate(16)
+            ->appends($request->query());
 
         // general.blade.phpへ渡す
         return view('topbook.general', compact('books'));
@@ -51,7 +53,9 @@ class BookController extends Controller
         }
 
         // 4. ID順に並び替えてデータを取得
-        $books = $query->orderBy('id', 'asc')->get();
+        $books = $query->orderBy('id', 'asc')
+            ->paginate(16)
+            ->appends($request->query());
 
         // accounting.blade.phpへ渡す
         return view('topbook.accounting', compact('books'));

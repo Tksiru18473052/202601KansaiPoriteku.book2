@@ -58,6 +58,11 @@
                     </a>
                 @endforeach
             </div>
+
+            <div class="pagination-wrapper">
+                {{ $books->links() }}
+            </div>
+
             @endisset
 
             {{-- 詳細画面などはここでコンテンツを上書き --}}
