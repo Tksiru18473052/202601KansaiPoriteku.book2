@@ -249,6 +249,7 @@ body {
     padding: 100px 0 30px;
 }
 
+
 /* コンテンツ */
 .content-container {
     max-width: 1400px;
@@ -407,6 +408,34 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);   /* 軽い影で目立たせる */
 }
 
+/* おすすめ度分布（縦並び） */
+.review-list {
+    margin-top: 10px;
+}
+
+.review-item {
+    font-size: 1.05rem;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+/* 書籍一覧の平均評価 */
+.book-average {
+    font-size: 1.05rem;
+    color: #f39c12;
+    font-weight: bold;
+    margin: 8px 0 0 0;
+}
+
+.book-average small {
+    font-weight: normal;
+    font-size: 0.85rem;
+    color: #777;
+}
 
 
 

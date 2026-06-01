@@ -21,7 +21,8 @@ class BookController extends Controller
 
             $query->where(function($q) use ($keyword) {
                 $q->where('bookname', 'like', '%' . $keyword . '%')
-                ->orWhere('author', 'like', '%' . $keyword . '%');
+                ->orWhere('author', 'like', '%' . $keyword . '%')
+                ->orWhere('publisher', 'like', '%' . $keyword . '%');
             });
         }
 
@@ -46,7 +47,8 @@ class BookController extends Controller
 
             $query->where(function($q) use ($keyword) {
                 $q->where('bookname', 'like', '%' . $keyword . '%')
-                ->orWhere('author', 'like', '%' . $keyword . '%');
+                ->orWhere('author', 'like', '%' . $keyword . '%')
+                ->orWhere('publisher', 'like', '%' . $keyword . '%');
             });
         }
 
@@ -56,14 +58,26 @@ class BookController extends Controller
         // accounting.blade.phpへ渡す
         return view('topbook.accounting', compact('books'));
     }
-//コメントのshowメソッド
-        public function show($id)
-        {
-             $book = Book::with('comments.user')   // 復習：コメントと投稿者情報も一緒に取得
-                ->findOrFail($id);
+    public function show($id)
+    {
+        $book = Book::with('comments.user')   // コメントと投稿者情報も取得
+                    ->findOrFail($id);
 
-            return view('comment.show', compact('book'));
+        // ★★★ レビューの分布を計算 ★★★
+        $reviewDistribution = $book->comments()
+            ->selectRaw('review, COUNT(*) as count')
+            ->groupBy('review')
+            ->orderBy('review', 'desc')
+            ->pluck('count', 'review')
+            ->toArray();
+
+        // 0〜5の星がすべて存在するように初期化
+        for ($i = 5; $i >= 1; $i--) {
+            $reviewDistribution[$i] = $reviewDistribution[$i] ?? 0;
         }
+
+        return view('comment.show', compact('book', 'reviewDistribution'));
+    }
 
         /**
      * 削除画面を表示（経理部社員専用）

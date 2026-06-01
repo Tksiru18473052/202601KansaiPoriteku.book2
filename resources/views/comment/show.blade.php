@@ -5,10 +5,8 @@
 
 @section('header_action')
     @if (auth()->user()->isAccounting())
-        {{-- 経理部社員の場合は accounting に戻る --}}
         <a href="{{ route('books.accounting') }}" class="btn-register">一覧に戻る</a>
     @else
-        {{-- 一般社員の場合は general に戻る --}}
         <a href="{{ route('books.general') }}" class="btn-register">一覧に戻る</a>
     @endif
 @endsection
@@ -16,15 +14,15 @@
 @section('content')
 <div class="detail-container">
 
-{{-- 成功メッセージ --}}
-@if (session('success'))
-    <div class="alert alert-success success-message text-center">
-        {{ session('success') }}
-    </div>
-@endif
+    {{-- 成功メッセージ --}}
+    @if (session('success'))
+        <div class="alert alert-success success-message text-center">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <div class="book-detail">
-        {{-- 書籍情報（中央寄せ） --}}
+        {{-- 書籍情報 --}}
         <div class="text-center mb-4">
             @if($book->image_url)
                 <img src="{{ asset($book->image_url) }}" 
@@ -38,53 +36,87 @@
             </p>
         </div>
 
-        <hr>
+<hr>
 
         <h4>みんなのコメント（{{ $book->comments->count() }}件）</h4>
 
-@foreach($book->comments as $comment)
-    <div class="comment mb-3 p-3 bg-light rounded">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <strong>{{ $comment->user->name ?? '匿名' }}</strong>
-                <span class="ms-2">⭐ {{ $comment->review }}/5</span>
+        <!-- おすすめ度の分布（星の数で視覚的に表示） -->
+        <div class="review-distribution mb-4">
+            <h5>おすすめ度の分布</h5>
+            <div class="review-list">
+                @for ($i = 5; $i >= 1; $i--)
+                    <div class="review-item d-flex align-items-center">
+                        <div class="star-display me-3">
+                            @for ($s = 1; $s <= 5; $s++)
+                                @if ($s <= $i)
+                                    ⭐
+                                @else
+                                    <span style="opacity: 0.2;">☆</span>
+                                @endif
+                            @endfor
+                        </div>
+                        <span class="ms-auto">{{ $reviewDistribution[$i] ?? 0 }}件</span>
+                    </div>
+                @endfor
             </div>
-
-{{-- 編集ボタン（自分のコメントのみ表示） --}}
-            @if ($comment->users_id === auth()->id())
-                <form action="{{ route('comments.edit', $comment) }}" method="GET" style="display: inline;">
-                    <button type="submit" class="btn btn-sm btn-warning me-2">
-                        ✏️ 編集
-                    </button>
-                </form>
-            @endif
-
-            {{-- 削除ボタン（自分のコメント or 経理部社員のみ表示） --}}
-            @if ($comment->users_id === auth()->id() || auth()->user()->isAccounting())
-                <form action="{{ route('comments.destroy', $comment) }}" method="POST" 
-                      onsubmit="return confirm('このコメントを削除しますか？');" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger">🗑 削除</button>
-                </form>
-            @endif
         </div>
-        <p class="mt-2 mb-0">{{ $comment->comment }}</p>
-    </div>
-@endforeach
+    <hr>
+    <br>
+    
+
+{{-- コメント一覧 --}}
+        @foreach($book->comments as $comment)
+            <div class="comment mb-3 p-3 bg-light rounded">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ $comment->user->name ?? '匿名' }}</strong>
+                        
+                        <!-- ★★★ 星の数で視覚的に表示 ★★★ -->
+                        <span class="ms-2">
+                            @for ($s = 1; $s <= 5; $s++)
+                                @if ($s <= $comment->review)
+                                    ⭐
+                                @else
+                                    <span style="opacity: 0.2;">☆</span>
+                                @endif
+                            @endfor
+                        </span>
+                    </div>
+
+                    {{-- 編集ボタン（自分のコメントのみ） --}}
+                    @if ($comment->users_id === auth()->id())
+                        <form action="{{ route('comments.edit', $comment) }}" method="GET" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-warning me-2">✏️ 編集</button>
+                        </form>
+                    @endif
+
+                    {{-- 削除ボタン --}}
+                    @if ($comment->users_id === auth()->id() || auth()->user()->isAccounting())
+                        <form action="{{ route('comments.destroy', $comment) }}" method="POST" 
+                              onsubmit="return confirm('このコメントを削除しますか？');" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">🗑 削除</button>
+                        </form>
+                    @endif
+                </div>
+                <p class="mt-2 mb-0">{{ $comment->comment }}</p>
+            </div>
+        @endforeach
 
         <hr>
 
+        {{-- コメント投稿フォーム --}}
         <h5>コメントを書く</h5>
         <form action="/comments" method="POST">
             @csrf
             <input type="hidden" name="book_id" value="{{ $book->id }}">
 
             <textarea name="comment" 
-            class="form-control comment-textarea" 
-            rows="8"                
-            placeholder="感想・コメントを入力してください" 
-            required></textarea>
+                      class="form-control comment-textarea" 
+                      rows="8" 
+                      placeholder="感想・コメントを入力してください" 
+                      required></textarea>
 
             <div class="mt-3">
                 <label>おすすめ度</label>

@@ -31,33 +31,68 @@
             {{-- 一覧画面の場合のみ書籍グリッドを表示 --}}
             @isset($books)
 <div class="book-grid">
-                @foreach ($books as $book)
-                    <a href="{{ route('books.show', $book->id) }}" class="book-card-link">
-                        <div class="book-card">
+    @foreach ($books as $book)
+        <div class="book-card">
 
-                            <div class="book-image-wrapper">
-                                <img
-                                    src="{{ asset($book->image_url ?? '') }}"
-                                    alt="{{ $book->bookname }}"
-                                    class="book-image">
-                            </div>
+            <!-- 画像をクリック → 詳細画面 -->
+            <a href="{{ route('books.show', $book->id) }}" class="book-image-link">
+                <div class="book-image-wrapper">
+                    <img src="{{ asset($book->image_url ?? '') }}"
+                         alt="{{ $book->bookname }}"
+                         class="book-image">
+                </div>
+            </a>
 
-                            <div class="book-info">
-                                <p class="book-bookname">
-                                    {{ $book->bookname }}
-                                </p>
-                                <p class="book-author">
-                                    {{ $book->author ?? '著者不明' }}
-                                </p>
-                                <p class="publisher">
-                                    {{ $book->publisher ?? '出版社不明' }}
-                                </p>
-                            </div>
+            <div class="book-info">
+                <!-- 書籍名をクリック → 詳細画面 -->
+                <a href="{{ route('books.show', $book->id) }}" class="book-bookname-link">
+                    <p class="book-bookname">
+                        {{ $book->bookname }}
+                    </p>
+                </a>
 
-                        </div>
+                <!-- 著者名をクリック → 著者名で検索 -->
+                @if($book->author)
+                    <a href="{{ url('/books/general?keyword=' . urlencode($book->author)) }}" class="book-author-link">
+                        <p class="book-author">
+                            {{ $book->author }}
+                        </p>
                     </a>
-                @endforeach
+                @else
+                    <p class="book-author text-muted">著者不明</p>
+                @endif
+
+                <!-- 出版社名をクリック → 出版社名で検索 -->
+                @if($book->publisher)
+                    <a href="{{ url('/books/general?keyword=' . urlencode($book->publisher)) }}" class="publisher-link">
+                        <p class="publisher">
+                            {{ $book->publisher }}
+                        </p>
+                    </a>
+                @else
+                    <p class="publisher text-muted">出版社不明</p>
+
+                    
+                @endif
+
+                @php
+                    $avgReview = $book->comments->avg('review');
+                    @endphp
+                        @if ($avgReview)
+                            <p class="book-average mt-2">
+                                ⭐ {{ number_format($avgReview, 1) }}
+                            <small class="text-muted">（{{ $book->comments->count() }}件）</small>
+                            </p>
+                        @else
+                        <p class="book-average mt-2 text-muted">
+                                まだ評価がありません
+                            </p>
+                    @endif
             </div>
+
+        </div>
+    @endforeach
+</div>
             @endisset
 
             {{-- 詳細画面などはここでコンテンツを上書き --}}
