@@ -68,6 +68,12 @@ Route::get('/registrationConfirm', [RegistrationController::class, 'confirm'])
 
 });
 
+// コメント編集
+Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])
+     ->name('comments.edit');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])
+     ->name('comments.update');
+
 
 
 // ==============================================

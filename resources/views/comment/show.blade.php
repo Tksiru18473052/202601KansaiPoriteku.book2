@@ -50,10 +50,19 @@
                 <span class="ms-2">⭐ {{ $comment->review }}/5</span>
             </div>
 
+{{-- 編集ボタン（自分のコメントのみ表示） --}}
+            @if ($comment->users_id === auth()->id())
+                <form action="{{ route('comments.edit', $comment) }}" method="GET" style="display: inline;">
+                    <button type="submit" class="btn btn-sm btn-warning me-2">
+                        ✏️ 編集
+                    </button>
+                </form>
+            @endif
+
             {{-- 削除ボタン（自分のコメント or 経理部社員のみ表示） --}}
             @if ($comment->users_id === auth()->id() || auth()->user()->isAccounting())
                 <form action="{{ route('comments.destroy', $comment) }}" method="POST" 
-                onsubmit="return confirm('このコメントを削除しますか？');">
+                      onsubmit="return confirm('このコメントを削除しますか？');" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-sm btn-danger">🗑 削除</button>
