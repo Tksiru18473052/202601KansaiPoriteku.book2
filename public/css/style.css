@@ -6,6 +6,7 @@
 body {
     margin: 0;
     padding-top: 70px; /* ヘッダーの高さ分 */
+    padding: 0;
     font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
     background: linear-gradient(135deg, #4facfe, #00c6fb);
     min-height: 100vh;
@@ -406,61 +407,6 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);   /* 軽い影で目立たせる */
 }
 
-/* =========================
-   ページネーション
-========================= */
-
-.pagination-wrapper {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-}
-
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 6px;
-}
-
-.page-item {
-    display: inline-block;
-}
-
-.page-link {
-    display: block;
-    padding: 8px 14px;
-
-    background-color: #ffffff;
-    color: #2c3e50;
-
-    border: 1px solid #dcdcdc;
-    border-radius: 6px;
-
-    text-decoration: none;
-
-    transition: all 0.2s ease;
-}
-
-.page-link:hover {
-    background-color: #3498db;
-    color: white;
-    border-color: #3498db;
-}
-
-.page-item.active .page-link {
-    background-color: #2c3e50;
-    color: white;
-    border-color: #2c3e50;
-}
-
-.page-item.disabled .page-link {
-    color: #999;
-    background-color: #f5f5f5;
-    border-color: #ddd;
-    cursor: not-allowed;
-}
 
 
 
