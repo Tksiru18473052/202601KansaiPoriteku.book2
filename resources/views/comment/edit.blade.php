@@ -4,11 +4,31 @@
 @section('page_title', 'コメント編集')
 
 @section('content')
-<div class="detail-container">   {{-- ← ここを追加して中央寄せにする --}}
+<div class="detail-container">
 
-    <div class="card mx-auto" style="max-width: 700px;">
+    {{-- 成功メッセージ --}}
+    @if (session('success'))
+        <div class="alert alert-success success-message text-center">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- エラーメッセージ --}}
+    @if ($errors->any() || session('error'))
+        <div class="alert alert-danger text-center">
+            @if (session('error'))
+                {{ session('error') }}
+            @else
+                @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                @endforeach
+            @endif
+        </div>
+    @endif
+
+    <div class="card">
         <div class="card-body">
-            <h4 class="text-center mb-4">コメントを編集</h4>
+            <h4>コメントを編集</h4>
 
             <form action="{{ route('comments.update', $comment) }}" method="POST">
                 @csrf
@@ -30,12 +50,8 @@
                     </select>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary px-5">更新する</button>
-                    <br>
-                    <br>
-                    <a href="{{ route('books.show', $comment->book_id) }}" class="btn btn-secondary px-5">キャンセル</a>
-                </div>
+                <button type="submit" class="btn btn-primary">更新する</button>
+                <a href="{{ route('books.show', $comment->book_id) }}" class="btn btn-secondary">キャンセル</a>
             </form>
         </div>
     </div>

@@ -79,17 +79,31 @@ class BookController extends Controller
         return view('comment.show', compact('book', 'reviewDistribution'));
     }
 
-        /**
-     * 削除画面を表示（経理部社員専用）
+    /**
+     * 削除画面を表示（経理部社員専用・検索対応）
      */
-    public function deleteIndex()
+    public function deleteIndex(Request $request)
     {
-
+        // 一般社員はアクセス不可
         if (!auth()->user()->isAccounting()) {
             return redirect()->route('books.general')
-->with('error', 'このページは経理部社員のみ利用可能です。');
+                             ->with('error', 'このページは経理部社員のみ利用可能です。');
         }
-        $books = Book::all();
+
+        $query = Book::query();
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+
+            $query->where(function($q) use ($keyword) {
+                $q->where('bookname', 'like', '%' . $keyword . '%')
+                  ->orWhere('author', 'like', '%' . $keyword . '%')
+                  ->orWhere('publisher', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $books = $query->orderBy('id', 'asc')->get();
+
         return view('topbook.delete', compact('books'));
     }
 

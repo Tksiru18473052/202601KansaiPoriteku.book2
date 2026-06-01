@@ -11,13 +11,21 @@
     <header class="app-header">
         <div class="header-container">
             <h2 class="header-logo">蔵書管理</h2>
+            
+            <!-- 検索フォーム -->
+            <form action="{{ route('books.delete') }}" method="GET" class="search-form">
+                <input type="text" name="keyword" value="{{ request('keyword') }}" 
+                       placeholder="タイトル、著者名、出版社名で検索..." class="search-input">
+                <button type="submit" class="search-button">検索</button>
+            </form>
+
             <div class="header-action">
                 <a href="{{ route('books.accounting') }}" class="btn-register">一覧に戻る</a>
             </div>
         </div>
     </header>
 
-    <main class="main-wrapper">
+<main class="main-wrapper">
         <div class="content-container">
             <h1 class="page-title">書籍削除（経理部社員専用）</h1>
 
@@ -41,18 +49,49 @@
                     @foreach($books as $book)
                     <tr>
                         <td>
-                            @if($book->image_url)
-                                <img src="{{ asset($book->image_url) }}" alt="" width="60" class="img-thumbnail">
+                            <!-- 画像をクリック → 詳細画面 -->
+                            <a href="{{ route('books.show', $book->id) }}">
+                                @if($book->image_url)
+                                    <img src="{{ asset($book->image_url) }}" alt="" width="60" class="img-thumbnail">
+                                @else
+                                    なし
+                                @endif
+                            </a>
+                        </td>
+                        <td>
+                            <!-- 書籍名をクリック → 詳細画面 -->
+                            <a href="{{ route('books.show', $book->id) }}" class="text-decoration-none fw-bold">
+                                {{ $book->bookname }}
+                            </a>
+                        </td>
+                        
+                        <!-- 著者名をクリック → 著者名で検索 -->
+                        <td>
+                            @if($book->author)
+                                <a href="{{ route('books.delete') }}?keyword={{ urlencode($book->author) }}" 
+                                   class="text-decoration-none">
+                                    {{ $book->author }}
+                                </a>
                             @else
-                                なし
+                                不明
                             @endif
                         </td>
-                        <td>{{ $book->bookname }}</td>
-                        <td>{{ $book->author ?? '不明' }}</td>
-                        <td>{{ $book->publisher ?? '不明' }}</td>
+                        
+                        <!-- 出版社名をクリック → 出版社名で検索 -->
+                        <td>
+                            @if($book->publisher)
+                                <a href="{{ route('books.delete') }}?keyword={{ urlencode($book->publisher) }}" 
+                                   class="text-decoration-none">
+                                    {{ $book->publisher }}
+                                </a>
+                            @else
+                                不明
+                            @endif
+                        </td>
+                        
                         <td>
                             <form action="{{ route('books.destroy', $book) }}" method="POST"
-                            onsubmit="return confirm('本当に「{{ addslashes($book->bookname) }}」を削除しますか？\nこの操作は取り消せません。');">
+                                  onsubmit="return confirm('本当に「{{ addslashes($book->bookname) }}」を削除しますか？\nこの操作は取り消せません。');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">🗑 削除</button>

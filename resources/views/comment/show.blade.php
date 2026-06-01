@@ -6,6 +6,8 @@
 @section('header_action')
     @if (auth()->user()->isAccounting())
         <a href="{{ route('books.accounting') }}" class="btn-register">一覧に戻る</a>
+        <a href="/bookRegistration" class="btn-register me-2">📝 書籍登録</a>
+        <a href="/books/delete" class="btn-delete">🗑 書籍削除</a>
     @else
         <a href="{{ route('books.general') }}" class="btn-register">一覧に戻る</a>
     @endif
@@ -20,6 +22,19 @@
             {{ session('success') }}
         </div>
     @endif
+
+    {{-- ★★★ エラーメッセージを表示する部分 ★★★ --}}
+@if ($errors->any() || session('error'))
+    <div class="alert alert-danger text-center">
+        @if (session('error'))
+            {{ session('error') }}
+        @else
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        @endif
+    </div>
+@endif
 
     <div class="book-detail">
         {{-- 書籍情報 --}}
