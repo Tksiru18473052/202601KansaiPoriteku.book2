@@ -1,7 +1,7 @@
 @extends('topbook.base')
 
-@section('title', '書籍一覧（経理部社員）')
-@section('page_title', '書籍一覧')
+@section('title', '蔵書一覧（経理部社員）')
+@section('page_title', '蔵書一覧')
 
 {{-- 経理部社員だけ、ヘッダーに2つのボタンを表示 --}}
 @section('header_action')
