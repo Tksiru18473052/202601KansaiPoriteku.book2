@@ -24,7 +24,7 @@ class CommentController extends \App\Http\Controllers\Controller   // 親クラ�
         ]);
 
         return redirect()->route('books.show', $request->book_id)
-                         ->with('success', 'コメントを投稿しました！');
+        ->with('success', 'コメントを投稿しました！');
     }
 
     /**

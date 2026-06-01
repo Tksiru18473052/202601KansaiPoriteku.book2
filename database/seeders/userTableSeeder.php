@@ -22,18 +22,21 @@ class UserTableSeeder extends Seeder
             'password'  => Hash::make('password'), // 学習用パスワード（本番では絶対に変えてください）
             'roles_id'  => 1,                     // 一般社員（rolesテーブルのid=1）
         ]);
+        User::create(['name' => '一般次郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般三郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般四郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般五郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般六郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般七郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般八郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般九郎', 'password' => Hash::make('password'), 'roles_id' => 1]);
+        User::create(['name' => '一般十郎', 'password' => Hash::make('password'), 'roles_id' => 1]);       
 
         // 経理部ユーザー（経理部としてログインして新規登録・削除をテスト用）
         User::create([
             'name'      => '経理花子',
             'password'  => Hash::make('password'),
             'roles_id'  => 2,                     // 経理部（rolesテーブルのid=2）
-        ]);
-
-                User::create([
-            'name'      => '一般次郎',           // 名前（仕様書に沿ったわかりやすい名前）
-            'password'  => Hash::make('pass'), // 学習用パスワード（本番では絶対に変えてください）
-            'roles_id'  => 1,                     // 一般社員（rolesテーブルのid=1）
         ]);
 
         // 経理部ユーザー（経理部としてログインして新規登録・削除をテスト用）
