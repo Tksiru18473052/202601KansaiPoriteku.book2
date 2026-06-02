@@ -17,8 +17,18 @@
                 <button type="submit" class="search-button">検索</button>
             </form>
 
-            <div class="header-action">
+        <div class="header-action">
                 @yield('header_action')
+
+                <!-- ログアウトボタン（常に表示） -->
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-logout">
+                            ログアウト
+                        </button>
+                    </form>
+                @endauth
             </div>
         </div>
     </header>

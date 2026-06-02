@@ -53,9 +53,16 @@
 <div class="container">
     <h1>書籍登録</h1>
 
-    @if (session('error'))
+@if (session('error'))
         <div style="background-color: #f8d7da; color: #bd2130; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid #f5c6cb;">
             ⚠️ {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- ★★★ ここに追加 ★★★ -->
+    @if (session('warning'))
+        <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid #ffeaa7;">
+            ⚠️ {{ session('warning') }}
         </div>
     @endif
 

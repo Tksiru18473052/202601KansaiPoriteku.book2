@@ -10,63 +10,69 @@ class RegistrationController extends Controller
 {
     /**
      * 登録フォーム画面を表示する (GET)
+     * 経理部社員のみアクセス可能
      */
     public function create(Request $request)
     {
-
-    if (!auth()->user()->isAccounting()) {
+        // ① 権限チェック（経理部社員以外はアクセス不可）
+        if (!auth()->user()->isAccounting()) {
             return redirect()->route('books.general')
-->with('error', 'このページは経理部社員のみ利用可能です。');
+                             ->with('error', 'このページは経理部社員のみ利用可能です。');
         }
 
         $isbn = $request->query('isbn');
         $title = null;
         $author = null;    
         $publisher = null; 
+        $image_url = null;
 
+        // ② ISBNが指定されている場合のみAPI検索
         if ($isbn) {
-            // 全角英数を半角に変換し、ハイフンやスペースを除去
             $cleanIsbn = mb_convert_kana($isbn, "a", "UTF-8");
             $cleanIsbn = str_replace(['-', ' '], '', $cleanIsbn);
 
-            // openBD API から書籍情報を取得
-            //$response = Http::get("https://api.openbd.jp/v1/get?isbn={$cleanIsbn}");
-
-            $response = Http::withOptions([
-                'proxy' => 'http://172.16.61.1:3128',
-            ])->get(
-                'https://api.openbd.jp/v1/get',
-                [
+            try {
+                // プロキシ設定とタイムアウト、クエリパラメータを統合してAPIリクエストを送信
+                $response = Http::withOptions([
+                    'proxy' => 'http://172.16.61.1:3128',
+                ])->timeout(8)->get('https://api.openbd.jp/v1/get', [
                     'isbn' => $cleanIsbn,
-                ]
-            );
-            
-            if ($response->successful()) {
-                $data = $response->json();
-                if ($data && $data[0] !== null) {
-                    $title     = $data[0]['summary']['title'] ?? null;
-                    $author    = $data[0]['summary']['author'] ?? null;    
-                    $publisher = $data[0]['summary']['publisher'] ?? null; 
-                    $isbn      = $cleanIsbn;
-                } else {
-                    session()->now('error', '書籍が見つかりませんでした。ISBN番号を確認してください。');
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if ($data && $data[0] !== null) {
+                        $summary = $data[0]['summary'] ?? [];
+
+                        $title     = $summary['title'] ?? null;
+                        $author    = $summary['author'] ?? null;    
+                        $publisher = $summary['publisher'] ?? null; 
+                        $image_url = $summary['cover'] ?? null;   // 表紙画像URL
+
+                        $isbn = $cleanIsbn;
+
+                        // 著者が配列の場合（文字列に結合）
+                        if (is_array($author)) {
+                            $author = implode(', ', $author);
+                        }
+                    } else {
+                        session()->now('error', '書籍が見つかりませんでした。ISBN番号を確認してください。');
+                    }
                 }
-            } else {
-                session()->now('error', 'APIとの通信に失敗しました。');
+            } catch (\Exception $e) {
+                // APIエラーは無視して手動入力可能にする
+                session()->now('warning', 'APIが利用できません。手動で情報を入力してください。');
             }
         }
 
-        // 正しいビュー名「bookRegistration」を指定して表示
-        return view('topbook.bookRegistration', compact('isbn', 'title', 'author', 'publisher'));
+        // ③ ビューを表示（手動入力もAPI入力も両対応）
+        return view('topbook.bookRegistration', compact('isbn', 'title', 'author', 'publisher', 'image_url'));
     }
 
     /**
-     * 書籍の登録を実行し、完了画面（Confirm）へ移動する (POST)
-     */
-    /**
      * 書籍の登録を実行 (POST)
      */
-public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'bookname'  => 'required|string|max:255',
