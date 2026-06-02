@@ -7,55 +7,92 @@ use App\Http\Controllers\Controller;
 
 class BookController extends Controller
 {
-    /**
-     * 一般社員用の書籍一覧表示
+/**
+     * 一般社員用の書籍一覧表示（検索＋自動方向決定の並び替え）
      */
-    public function general(Request $request) // 1. 引数に $request を追加
+    public function general(Request $request)
     {
-        // 2. 検索用のクエリを準備
-        $query = Book::query();
+        $query = Book::withCount('comments')
+                     ->withAvg('comments', 'review');
 
-        // 3. 検索キーワードが入力されている場合、条件を追加
         if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
-
             $query->where(function($q) use ($keyword) {
                 $q->where('bookname', 'like', '%' . $keyword . '%')
-                ->orWhere('author', 'like', '%' . $keyword . '%')
-                ->orWhere('publisher', 'like', '%' . $keyword . '%');
+                  ->orWhere('author', 'like', '%' . $keyword . '%')
+                  ->orWhere('publisher', 'like', '%' . $keyword . '%');
             });
         }
 
-        // 4. ID順に並び替えてデータを取得
-        $books = $query->orderBy('id', 'asc')->get();
+        $sort = $request->get('sort', 'id');
 
-        // general.blade.phpへ渡す
+        // 自動で最適な方向を決定
+        if ($sort === 'bookname' || $sort === 'author' || $sort === 'publisher') {
+            $direction = 'asc';   // 名前系は昇順（あいうえお順）
+        } else {
+            $direction = 'desc';  // 新着順・平均評価・評価件数 は降順
+        }
+
+        if ($sort === 'bookname') {
+            $query->orderBy('bookname', $direction);
+        } elseif ($sort === 'author') {
+            $query->orderBy('author', $direction);
+        } elseif ($sort === 'publisher') {
+            $query->orderBy('publisher', $direction);
+        } elseif ($sort === 'avg_review') {
+            $query->orderBy('comments_avg_review', $direction);
+        } elseif ($sort === 'review_count') {
+            $query->orderBy('comments_count', $direction);
+        } else {
+            $query->orderBy('id', $direction);
+        }
+
+        $books = $query->get();
+
         return view('topbook.general', compact('books'));
     }
 
     /**
-     * 経理部社員用の書籍一覧表示
+     * 経理部社員用の書籍一覧表示（検索＋自動方向決定の並び替え）
      */
-    public function accounting(Request $request) // 1. 引数に $request を追加
+    public function accounting(Request $request)
     {
-        // 2. 検索用のクエリを準備
-        $query = Book::query();
+        $query = Book::withCount('comments')
+                     ->withAvg('comments', 'review');
 
-        // 3. 検索キーワードが入力されている場合、条件を追加
         if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
-
             $query->where(function($q) use ($keyword) {
                 $q->where('bookname', 'like', '%' . $keyword . '%')
-                ->orWhere('author', 'like', '%' . $keyword . '%')
-                ->orWhere('publisher', 'like', '%' . $keyword . '%');
+                  ->orWhere('author', 'like', '%' . $keyword . '%')
+                  ->orWhere('publisher', 'like', '%' . $keyword . '%');
             });
         }
 
-        // 4. ID順に並び替えてデータを取得
-        $books = $query->orderBy('id', 'asc')->get();
+        $sort = $request->get('sort', 'id');
 
-        // accounting.blade.phpへ渡す
+        if ($sort === 'bookname' || $sort === 'author' || $sort === 'publisher') {
+            $direction = 'asc';
+        } else {
+            $direction = 'desc';
+        }
+
+        if ($sort === 'bookname') {
+            $query->orderBy('bookname', $direction);
+        } elseif ($sort === 'author') {
+            $query->orderBy('author', $direction);
+        } elseif ($sort === 'publisher') {
+            $query->orderBy('publisher', $direction);
+        } elseif ($sort === 'avg_review') {
+            $query->orderBy('comments_avg_review', $direction);
+        } elseif ($sort === 'review_count') {
+            $query->orderBy('comments_count', $direction);
+        } else {
+            $query->orderBy('id', $direction);
+        }
+
+        $books = $query->get();
+
         return view('topbook.accounting', compact('books'));
     }
     public function show($id)

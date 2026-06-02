@@ -36,10 +36,32 @@
     <main class="main-wrapper">
         <div class="content-container">
             
-            <h1 class="page-title">@yield('page_title')</h1>
+<h1 class="page-title">@yield('page_title')</h1>
+
+
 
             {{-- 一覧画面の場合のみ書籍グリッドを表示 --}}
-            @isset($books)
+            @isset($books)       
+<!-- 自動方向決定の並び替えプルダウン -->
+<div class="mb-3">
+                <form method="GET" class="d-flex align-items-center">
+                    
+                    <!-- ★★★ 重要な修正：現在の検索キーワードを隠しフィールドで保持 ★★★ -->
+                    @if (request()->filled('keyword'))
+                        <input type="hidden" name="keyword" value="{{ request('keyword') }}">
+                    @endif
+
+                    <label class="me-2 fw-bold">並び替え：</label>
+                    <select name="sort" class="form-select w-auto" onchange="this.form.submit()">
+                        <option value="id" {{ request('sort') === 'id' ? 'selected' : '' }}>新着順</option>
+                        <option value="bookname" {{ request('sort') === 'bookname' ? 'selected' : '' }}>書籍名順</option>
+                        <option value="author" {{ request('sort') === 'author' ? 'selected' : '' }}>著者名順</option>
+                        <option value="publisher" {{ request('sort') === 'publisher' ? 'selected' : '' }}>出版社順</option>
+                        <option value="avg_review" {{ request('sort') === 'avg_review' ? 'selected' : '' }}>平均評価順</option>
+                        <option value="review_count" {{ request('sort') === 'review_count' ? 'selected' : '' }}>評価件数順</option>
+                    </select>
+                </form>
+            </div>
 <div class="book-grid">
     @foreach ($books as $book)
         <div class="book-card">
@@ -61,29 +83,29 @@
                     </p>
                 </a>
 
-                <!-- 著者名をクリック → 著者名で検索 -->
-                @if($book->author)
-                    <a href="{{ url('/books/general?keyword=' . urlencode($book->author)) }}" class="book-author-link">
-                        <p class="book-author">
-                            {{ $book->author }}
-                        </p>
-                    </a>
-                @else
-                    <p class="book-author text-muted">著者不明</p>
-                @endif
+<!-- 著者名をクリック → 現在の画面で検索 -->
+                        @if($book->author)
+                            <a href="{{ url(auth()->user()->isAccounting() ? '/books/accounting' : '/books/general') }}?keyword={{ urlencode($book->author) }}" 
+                               class="book-author-link">
+                                <p class="book-author">
+                                    {{ $book->author }}
+                                </p>
+                            </a>
+                        @else
+                            <p class="book-author text-muted">著者不明</p>
+                        @endif
 
-                <!-- 出版社名をクリック → 出版社名で検索 -->
-                @if($book->publisher)
-                    <a href="{{ url('/books/general?keyword=' . urlencode($book->publisher)) }}" class="publisher-link">
-                        <p class="publisher">
-                            {{ $book->publisher }}
-                        </p>
-                    </a>
-                @else
-                    <p class="publisher text-muted">出版社不明</p>
-
-                    
-                @endif
+                        <!-- 出版社名をクリック → 現在の画面で検索 -->
+                        @if($book->publisher)
+                            <a href="{{ url(auth()->user()->isAccounting() ? '/books/accounting' : '/books/general') }}?keyword={{ urlencode($book->publisher) }}" 
+                               class="publisher-link">
+                                <p class="publisher">
+                                    {{ $book->publisher }}
+                                </p>
+                            </a>
+                        @else
+                            <p class="publisher text-muted">出版社不明</p>
+                        @endif
 
                 @php
                     $avgReview = $book->comments->avg('review');

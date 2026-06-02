@@ -10,6 +10,9 @@ class RegistrationController extends Controller
 {
     /**
      * 登録フォーム画面を表示する (GET)
+     */
+    /**
+     * 登録フォーム画面を表示する (GET)
      * 経理部社員のみアクセス可能
      */
     public function create(Request $request)
@@ -32,12 +35,12 @@ class RegistrationController extends Controller
             $cleanIsbn = str_replace(['-', ' '], '', $cleanIsbn);
 
             try {
-                // プロキシ設定とタイムアウト、クエリパラメータを統合してAPIリクエストを送信
-                $response = Http::withOptions([
-                    'proxy' => 'http://172.16.61.1:3128',
-                ])->timeout(8)->get('https://api.openbd.jp/v1/get', [
-                    'isbn' => $cleanIsbn,
-                ]);
+                
+                $response = Http::timeout(8)
+    ->withOptions([
+        'proxy' => 'http://172.16.61.1:3128'   // ← ここに学校のプロキシ情報を入れる
+    ])
+    ->get("https://api.openbd.jp/v1/get?isbn={$cleanIsbn}");
 
                 if ($response->successful()) {
                     $data = $response->json();
@@ -51,12 +54,10 @@ class RegistrationController extends Controller
 
                         $isbn = $cleanIsbn;
 
-                        // 著者が配列の場合（文字列に結合）
+                        // 著者が配列の場合
                         if (is_array($author)) {
                             $author = implode(', ', $author);
                         }
-                    } else {
-                        session()->now('error', '書籍が見つかりませんでした。ISBN番号を確認してください。');
                     }
                 }
             } catch (\Exception $e) {
@@ -70,9 +71,12 @@ class RegistrationController extends Controller
     }
 
     /**
+     * 書籍の登録を実行し、完了画面（Confirm）へ移動する (POST)
+     */
+    /**
      * 書籍の登録を実行 (POST)
      */
-    public function store(Request $request)
+public function store(Request $request)
     {
         $request->validate([
             'bookname'  => 'required|string|max:255',
