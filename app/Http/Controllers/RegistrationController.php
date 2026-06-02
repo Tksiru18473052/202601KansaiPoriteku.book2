@@ -30,10 +30,16 @@ class RegistrationController extends Controller
             $cleanIsbn = str_replace(['-', ' '], '', $cleanIsbn);
 
             // openBD API から書籍情報を取得
-            $response = Http::get("https://api.openbd.jp/v1/get?isbn={$cleanIsbn}");
-            // 一時的にIPアドレスに書き換え、Hostヘッダーに本来のドメインを指定する
-            //$response = Http::withHeaders(['Host' => 'api.openbd.jp'])
-             //   ->get("https://13.94.43.197/v1/get?isbn={$cleanIsbn}");
+            //$response = Http::get("https://api.openbd.jp/v1/get?isbn={$cleanIsbn}");
+
+            $response = Http::withOptions([
+                'proxy' => 'http://172.16.61.1:3128',
+            ])->get(
+                'https://api.openbd.jp/v1/get',
+                [
+                    'isbn' => $cleanIsbn,
+                ]
+            );
             
             if ($response->successful()) {
                 $data = $response->json();
